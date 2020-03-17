@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom'
 
 class TodoApp extends Component {
     render() {
         return (
             <div className="TodoApp">
                 <Router>
-                    <> <Switch>
+                    <> <HeaderComponent/>
+                    <Switch>
                         <Route path="/" exact="exact" component={LoginComponent}/>
                         <Route path="/login" component={LoginComponent}/>
                         <Route path="/welcome/:name" component={WelcomeComponent}/>
                         <Route path="/todos" component={ListTodosComponent}/>
+                        <Route path="/logout" component={LogoutComponent}/>
                         <Route component={ErrorComponent}/>
                     </Switch>
+                    <FooterComponent/>
                 </>
             </Router>
         </div>
@@ -22,7 +25,10 @@ class TodoApp extends Component {
 
 class WelcomeComponent extends Component {
     render() {
-        return <div>Welcome {this.props.match.params.name}</div>
+        return <div>
+            Welcome {this.props.match.params.name}. You can mange your todos.
+            <Link to="/todos">here</Link>
+        </div>
     }
 }
 
@@ -33,13 +39,19 @@ class ListTodosComponent extends Component {
             todos: [
                 {
                     id: 1,
-                    description: 'Learn React1'
+                    description: 'Learn React1',
+                    done: false,
+                    targetDate: new Date()
                 }, {
                     id: 2,
-                    description: 'Learn React2'
+                    description: 'Learn React2',
+                    done: false,
+                    targetDate: new Date()
                 }, {
                     id: 3,
-                    description: 'Learn React3'
+                    description: 'Learn React3',
+                    done: false,
+                    targetDate: new Date()
                 }
             ]
         }
@@ -54,6 +66,8 @@ class ListTodosComponent extends Component {
                         <tr>
                             <th>id</th>
                             <th>description</th>
+                            <th>Is completed?</th>
+                            <th>Target Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,10 +76,21 @@ class ListTodosComponent extends Component {
                                 .state
                                 .todos
                                 .map(
-                                    todo => 
-                                    <tr>
+                                    todo => <tr>
                                         <td>{todo.id}</td>
                                         <td>{todo.description}</td>
+                                        <td>{
+                                                todo
+                                                    .done
+                                                    .toString()
+                                            }</td>
+                                        <td>
+                                            {
+                                                todo
+                                                    .targetDate
+                                                    .toString()
+                                            }
+                                        </td>
                                     </tr>
                                 )
                         }
@@ -78,6 +103,59 @@ class ListTodosComponent extends Component {
 
 function ErrorComponent() {
     return <div>An Error Occured. I don't know this URL</div>
+}
+
+class HeaderComponent extends Component {
+    render() {
+        return (
+            <header>
+                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+                    <div>
+                        <a href="https://github.com/kihwankim" className="navbar-brand">kkh page</a>
+                    </div>
+                    <ul className="navbar-nav">
+                        <li>
+                            <Link to="/welcome/dummy" className="nav-link">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/todos" className="nav-link">Todos</Link>
+                        </li>
+                    </ul>
+                    <ul className="navbar-nav navbar-collapse justify-content-end">
+                        <li>
+                            <Link to="/login" className="nav-link">Login</Link>
+                        </li>
+                        <li>
+                            <Link to="/logout" className="nav-link">Logout</Link>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+        )
+    }
+}
+
+class FooterComponent extends Component {
+    render() {
+        return (
+            <footer className="footer">
+                <span className="text-muted">All Rights Reserved 2020 kkh</span>
+            </footer>
+        );
+    }
+}
+
+class LogoutComponent extends Component {
+    render() {
+        return (
+            <div>
+                <h1>You are logout</h1>
+                <div className="container">
+                    Thank You for Using Our Application
+                </div>
+            </div>
+        )
+    }
 }
 
 class LoginComponent extends Component {
