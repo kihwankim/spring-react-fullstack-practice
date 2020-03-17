@@ -10,6 +10,7 @@ class TodoApp extends Component {
                         <Route path="/" exact="exact" component={LoginComponent}/>
                         <Route path="/login" component={LoginComponent}/>
                         <Route path="/welcome/:name" component={WelcomeComponent}/>
+                        <Route path="/todos" component={ListTodosComponent}/>
                         <Route component={ErrorComponent}/>
                     </Switch>
                 </>
@@ -22,6 +23,56 @@ class TodoApp extends Component {
 class WelcomeComponent extends Component {
     render() {
         return <div>Welcome {this.props.match.params.name}</div>
+    }
+}
+
+class ListTodosComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            todos: [
+                {
+                    id: 1,
+                    description: 'Learn React1'
+                }, {
+                    id: 2,
+                    description: 'Learn React2'
+                }, {
+                    id: 3,
+                    description: 'Learn React3'
+                }
+            ]
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>List Todos</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            this
+                                .state
+                                .todos
+                                .map(
+                                    todo => 
+                                    <tr>
+                                        <td>{todo.id}</td>
+                                        <td>{todo.description}</td>
+                                    </tr>
+                                )
+                        }
+                    </tbody>
+                </table>
+            </div>
+        );
     }
 }
 
