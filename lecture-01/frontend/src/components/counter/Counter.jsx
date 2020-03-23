@@ -70,9 +70,9 @@ class Counter extends Component {
 class CounterButton extends Component {
 
     // Define the initial state in a counstructor state => counter 0
-    constructor() {
-        super(); // Error 1
-    }
+    // constructor() {
+    //     super(); // Error 1
+    // }
 
     render = () => {
         return (
