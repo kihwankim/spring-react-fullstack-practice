@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
+import TodoDataService from '../../api/todo/TodoDataService';
+import AuthenticationService from './AuthenticationService';
 
 class TodoComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            id: 1,
-            description: 'Learn Forms',
+            id: this.props.match.params.id,
+            description: 'Learn Form now',
             targetDate: moment(new Date()).format('YYYY-MM-DD')
         };
 
@@ -20,18 +22,30 @@ class TodoComponent extends Component {
             .bind(this);
     }
 
+    componentDidMount() {
+        let username = AuthenticationService.getLoggedInUserName();
+        TodoDataService
+            .retrieveTodo(username, this.state.id)
+            .then(response => {
+                this.setState(
+                    {description: response.data.description, targetDate: moment(response.data.targetDate).format('YYYY-MM-DD')}
+                );
+                console.log(response);
+            });
+    }
+
     onSubmit(values) {
         console.log(values);
     }
 
     validate(values) {
         let errors = {};
-        if(!values.description) {
+        if (!values.description) {
             errors.description = 'Enter a Description';
-        } else if(values.description.length < 5){
-            errors.description = 'Enter at least 5 Characters in Description'; 
+        } else if (values.description.length < 5) {
+            errors.description = 'Enter at least 5 Characters in Description';
         }
-        if(moment(values.targetDate).isValid()){
+        if (moment(values.targetDate).isValid()) {
             errors.targetDate = 'Enter a valid Date';
         }
         console.log(values);
@@ -58,8 +72,14 @@ class TodoComponent extends Component {
                         {
                             (props) => (
                                 <Form>
-                                    <ErrorMessage name ="description" component="div" className="alert alert-warning"/>
-                                    <ErrorMessage name ="targetDate" component="div" className="alert alert-warning"/>
+                                    <ErrorMessage
+                                        name="description"
+                                        component="div"
+                                        className="alert alert-warning"/>
+                                    <ErrorMessage
+                                        name="targetDate"
+                                        component="div"
+                                        className="alert alert-warning"/>
                                     <fieldset className="form-group">
                                         <label>Description</label>
                                         <Field className="form-control" type="text" name="description"/>

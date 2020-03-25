@@ -46,7 +46,6 @@ class ListTodosComponent extends Component {
     }
 
     updateTodoClicked(id) {
-        console.log('update');
         this
             .props
             .history
