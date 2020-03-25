@@ -16,6 +16,9 @@ class ListTodosComponent extends Component {
         this.refreshTodos = this
             .refreshTodos
             .bind(this);
+        this.updateTodoClicked = this
+            .updateTodoClicked
+            .bind(this);
     }
 
     componentDidMount() {
@@ -40,6 +43,14 @@ class ListTodosComponent extends Component {
                 this.setState({message: `Delete of todo ${id} Successful`});
                 this.refreshTodos();
             });
+    }
+
+    updateTodoClicked(id) {
+        console.log('update');
+        this
+            .props
+            .history
+            .push(`/todos/${id}`);
     }
 
     render() {
@@ -78,6 +89,13 @@ class ListTodosComponent extends Component {
                                                         .targetDate
                                                         .toString()
                                                 }
+                                            </td>
+                                            <td>
+                                                <button
+                                                    className="btn btn-success"
+                                                    onClick={() => {
+                                                        this.updateTodoClicked(todo.id)
+                                                    }}>Update</button>
                                             </td>
                                             <td>
                                                 <button
