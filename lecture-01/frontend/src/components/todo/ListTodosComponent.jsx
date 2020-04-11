@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import TodoDataService from '../../api/todo/TodoDataService';
 import AuthenticationService from './AuthenticationService';
+import moment from 'moment';
 
 class ListTodosComponent extends Component {
     constructor(props) {
@@ -18,6 +19,9 @@ class ListTodosComponent extends Component {
             .bind(this);
         this.updateTodoClicked = this
             .updateTodoClicked
+            .bind(this);
+        this.addTodoClick = this
+            .addTodoClick
             .bind(this);
     }
 
@@ -52,6 +56,13 @@ class ListTodosComponent extends Component {
             .push(`/todos/${id}`);
     }
 
+    addTodoClick() {
+        this
+            .props
+            .history
+            .push(`/todos/-1`);
+    }
+
     render() {
         return (
             <div>
@@ -81,13 +92,10 @@ class ListTodosComponent extends Component {
                                                     todo
                                                         .done
                                                         .toString()
-                                                }</td>
-                                            <td>
-                                                {
-                                                    todo
-                                                        .targetDate
-                                                        .toString()
                                                 }
+                                            </td>
+                                            <td>
+                                                {moment(todo.targetDate).format('YYYY-MM-DD')}
                                             </td>
                                             <td>
                                                 <button
@@ -108,6 +116,9 @@ class ListTodosComponent extends Component {
                             }
                         </tbody>
                     </table>
+                    <div className="row">
+                        <button className="btn btn-success" onClick={this.addTodoClick}>Add</button>
+                    </div>
                 </div>
             </div>
         );

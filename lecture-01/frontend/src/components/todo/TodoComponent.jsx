@@ -23,19 +23,50 @@ class TodoComponent extends Component {
     }
 
     componentDidMount() {
+        if (this.state.id === -1) {
+            return;
+        }
+
         let username = AuthenticationService.getLoggedInUserName();
         TodoDataService
             .retrieveTodo(username, this.state.id)
             .then(response => {
-                this.setState(
-                    {description: response.data.description, targetDate: moment(response.data.targetDate).format('YYYY-MM-DD')}
-                );
+                this.setState({
+                    description: response.data.description,
+                    targetDate: moment(response.data.targetDate).format('YYYY-MM-DD')
+                });
                 console.log(response);
             });
     }
 
     onSubmit(values) {
-        console.log(values);
+        const username = AuthenticationService.getLoggedInUserName();
+
+        const todo = {
+            id: values.id,
+            description: values.description,
+            targetDate: values.targetDate
+        }
+
+        if (this.state.id === 1) {
+            TodoDataService
+                .createTodo(username, todo)
+                .then(() => {
+                    this
+                        .props
+                        .history
+                        .push('/todos');
+                });
+        } else {
+            TodoDataService
+                .updateTodo(username, this.state.id, todo)
+                .then(() => {
+                    this
+                        .props
+                        .history
+                        .push('/todos');
+                });
+        }
     }
 
     validate(values) {
@@ -45,7 +76,7 @@ class TodoComponent extends Component {
         } else if (values.description.length < 5) {
             errors.description = 'Enter at least 5 Characters in Description';
         }
-        if (moment(values.targetDate).isValid()) {
+        if (!moment(values.targetDate).isValid()) {
             errors.targetDate = 'Enter a valid Date';
         }
         console.log(values);

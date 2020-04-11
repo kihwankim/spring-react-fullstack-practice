@@ -44,6 +44,8 @@ public class TodoController {
             @PathVariable String username,
             @PathVariable long id,
             @RequestBody Todo todo) {
+        todo.setId(id);
+        todo.setUsername(username);
         Todo todoUpdated = this.todoService.save(todo);
 
         return new ResponseEntity<>(todoUpdated, HttpStatus.OK);
