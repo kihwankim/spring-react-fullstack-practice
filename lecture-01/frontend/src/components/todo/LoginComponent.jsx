@@ -29,17 +29,20 @@ class LoginComponent extends Component {
 
     loginClicked() {
         // dummy, dummy
-        if (this.state.username === 'dummy' && this.state.password === 'dummy') {
-            AuthenticationService.registerSuccessfulLogin(this.state.username);
-            this
-                .props
-                .history
-                .push(`/welcome/${this.state.username}`); // change the page
-            // this.setState({showSuccessMessage: true, hasLoginFailed: false});
-        } else {
-            this.setState({showSuccessMessage: false, hasLoginFailed: true});
+        AuthenticationService
+            .executeBasicAuthenticationService(
+                this.state.username,
+                this.state.password
+            )
+            .then(() => {
+                AuthenticationService.registerSuccessfulLogin(this.state.username);
+                this
+                    .props
+                    .history
+                    .push(`/welcome/${this.state.username}`); // change the page
+            })
+            .catch(() => this.setState({showSuccessMessage: false, hasLoginFailed: true}));
         }
-    }
 
     render() {
         return (
