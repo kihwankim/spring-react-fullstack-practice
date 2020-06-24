@@ -10,14 +10,33 @@ class AuthenticationService {
         });
     }
 
+    executeJwtAuthenticationService(username, password) {
+        return axios.post('http://localhost:8080/authenticate', {
+            username,
+            password
+        });
+    }
+
+
     createBasicAuthToken(username, password) {
         return 'Basic ' + window.btoa(username + ':' + password);
     }
+
+    createJWTToken(token) {
+        console.log('Bearer ' + token);
+        return 'Bearer ' + token;
+    } // token 형성
+
 
     registerSuccessfulLogin(username, password) {
         //const basicAuthHeader = 'Basic ' + window.btoa(username + ':' + password);
         sessionStorage.setItem('authenticatedUser', username);
         this.setupAxiosIntercepters(this.createBasicAuthToken(username, password));
+    }
+
+    registerSuccessfulLoginForJwt(username, token) {
+        sessionStorage.setItem('authenticatedUser', username);
+        this.setupAxiosIntercepters(this.createJWTToken(token));
     }
 
     logout() {
@@ -42,13 +61,13 @@ class AuthenticationService {
         return user;
     }
 
-    setupAxiosIntercepters(basicAuthHeader) {
+    setupAxiosIntercepters(token) {
         axios
             .interceptors
             .request
             .use((config) => {
                 if (this.isUserLoggedIn()) {
-                    config.headers.authorization = basicAuthHeader;
+                    config.headers.authorization = token;
                 }
 
                 return config;
