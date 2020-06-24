@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * provider 로서 인증 처리 기능을 구현하기 위한 인터페이스이다
+ * claim : 정보의 한 조각
+ * registered, private, public claim이 존재
+ */
 @Component
 public class JwtTokenUtil implements Serializable { // token processing 작업을 한다.
 
